@@ -23,7 +23,7 @@ Install required dependencies
 npm install
 ```
 
-The config.js file requires population of the twitter auth credentials of whichever account you want to run as (and retweet from)
+The config.json file requires population of the twitter auth credentials of whichever account you want to run as (and retweet from)
 
 Additionally there are options to change how often the program looks for new tweets (in mins - by default it's set to 25 minutes)
 Run the application

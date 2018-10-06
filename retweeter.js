@@ -1,34 +1,54 @@
 const twit = require('twit');
 const config = require('./config');
 
-const Twitter = new twit(config);
+const Twitter = new twit(config.Authorization);
 
-const retweet = () => {
-  const params = {
-    q: '#nodejs, #phantomWire',
-    result_type: 'recent', // Recent means it'll retweet everything since the last time this program ran.
-    lang: 'en'
-  };
+const searchTerms = config.Query.searchTerms || '#PhantomWire';
 
-  Twitter.get('search/tweets', params, (err, data) => {
-    if (!err) {
-      const retweetId = data.statuses[0].id_str;
-      Twitter.post('statuses/retweet/:id', {
-        id: retweetId
-      }, function(err, response) {
-        if (response) {
-          console.log('Retweeted!!!');
-        }
-        if (err) {
-          console.error('Something went wrong while RETWEETING... Duplication maybe...');
-        }
-      });
-    }
-    else {
-      console.error('Something went wrong while SEARCHING...');
-    }
+console.log(`Starting twitter retweet script`);
+
+if(!(config.Authorization.access_token || config.Authorization.access_token_secret ||
+      config.Authorization.consumer_key || config.Authorization.consumer_secret) ) {
+  console.log(`To run this script please populate Authorization details in config.json`);
+  process.exit(1);
+}
+
+const retweet = async () => {
+  const tweetsFound = await findTweets().catch(err => {
+    console.error(`Error finding Tweets: ${err}`);
+    return 1;
   });
+
+  if(tweetsFound.length === 0) {
+    console.log(`No new tweets were found for ${searchTerms}`);
+    return 2;
+  }
+
+  tweetsFound.forEach(tweet => {
+    sendRetweet(tweet.id_str)
+      .then(() => console.log(`Successfully retweeted ${tweet}`))
+      .catch(err => console.error(`Error retweeting ${tweet}. Error Msg: ${JSON.stringify(err)}`))
+  });
+
+  return 0;
 };
 
+const findTweets = async () => {
+  const params = {
+    q: searchTerms,
+    result_type: 'recent',
+    lang: 'en'
+  };
+  return Twitter.get('search/tweets', params).then(response => response.data.statuses);
+};
+
+const sendRetweet = async (id) => {
+  Twitter.post('statuses/retweet/:id', { id: id })
+    .then(response => console.log(response));
+};
+
+
+retweet();
+
 // retweet in every 25 minutes
-setInterval(retweet, 1500000);
+//setInterval(retweet, config.query.howOften * 60 * 10000);
