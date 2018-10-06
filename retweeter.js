@@ -25,9 +25,7 @@ const retweet = async () => {
   }
 
   tweetsFound.forEach(tweet => {
-    sendRetweet(tweet.id_str)
-      .then(() => console.log(`Successfully retweeted ${tweet}`))
-      .catch(err => console.error(`Error retweeting ${tweet}. Error Msg: ${JSON.stringify(err)}`))
+    sendRetweet(tweet.id_str);
   });
 
   return 0;
@@ -44,11 +42,8 @@ const findTweets = async () => {
 
 const sendRetweet = async (id) => {
   Twitter.post('statuses/retweet/:id', { id: id })
-    .then(response => console.log(response));
+    .then(response => response)
+    .catch(err => console.error(`Could not retweet : ${err}`));
 };
 
-
-retweet();
-
-// retweet in every 25 minutes
-//setInterval(retweet, config.query.howOften * 60 * 10000);
+setInterval(retweet, config.query.howOften * 60 * 10000);

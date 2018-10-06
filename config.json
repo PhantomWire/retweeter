@@ -1,12 +1,12 @@
 {
   "Authorization": {
-    "consumer_key": "",
-    "consumer_secret": "",
-    "access_token": "",
-    "access_token_secret": ""
+    "consumer_key": "pUOzhGTjZroCpmJAoMY9KaBo7",
+    "consumer_secret": "zMltSGWgFRTLUDCAJBJFMnFwEJxLwEBWhV6hnOYqKbjORq3wH3",
+    "access_token": "1048503281255948288-qNF2QeS9XXxw4OS3yXLjRZMNl6fz55",
+    "access_token_secret": "TNY6qjrbNNCAuggwN8sNZAOpbufklvX3F9hgNYbdeitpk"
   },
   "Query": {
-    "searchTerms": "#PhantomWire",
+    "searchTerms": "#BassetHound",
     "howOften": "25"
   }
 }
